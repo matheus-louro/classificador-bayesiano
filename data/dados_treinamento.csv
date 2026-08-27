@@ -1,0 +1,151 @@
+localizacao,dispositivo,horario,falhas_senha,tipo_rede,reputacao_ip,tentativa_invasao
+Habitual,Conhecido,Comercial (08h-18h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Conhecido,Noturno (18h-23h),3 ou mais,Confiável (Residencial/Corp),Limpa,SIM
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Madrugada (23h-08h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,WiFi_Publico,Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Nova (Nacional),Conhecido,Noturno (18h-23h),1 a 2,WiFi_Publico,Suspeita,SIM
+Internacional,Novo,Noturno (18h-23h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Internacional,Novo,Noturno (18h-23h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Noturno (18h-23h),3 ou mais,WiFi_Publico,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Novo,Madrugada (23h-08h),0,Confiável (Residencial/Corp),Limpa,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Proxy_VPN,Limpa,NÃO
+Nova (Nacional),Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Móvel (4G/5G),Limpa,NÃO
+Habitual,Novo,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Confiável (Residencial/Corp),Suspeita,SIM
+Internacional,Novo,Madrugada (23h-08h),1 a 2,Móvel (4G/5G),Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Móvel (4G/5G),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Madrugada (23h-08h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Novo,Madrugada (23h-08h),1 a 2,WiFi_Publico,Limpa,SIM
+Habitual,Novo,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Nova (Nacional),Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Novo,Noturno (18h-23h),1 a 2,WiFi_Publico,Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),0,WiFi_Publico,Suspeita,SIM
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Madrugada (23h-08h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),1 a 2,Proxy_VPN,Limpa,SIM
+Internacional,Novo,Noturno (18h-23h),1 a 2,Proxy_VPN,Limpa,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,WiFi_Publico,Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),0,WiFi_Publico,Limpa,SIM
+Nova (Nacional),Conhecido,Comercial (08h-18h),0,Móvel (4G/5G),Limpa,NÃO
+Nova (Nacional),Conhecido,Comercial (08h-18h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),0,WiFi_Publico,Limpa,NÃO
+Internacional,Novo,Comercial (08h-18h),3 ou mais,Proxy_VPN,Limpa,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Móvel (4G/5G),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Móvel (4G/5G),Limpa,NÃO
+Nova (Nacional),Conhecido,Noturno (18h-23h),0,WiFi_Publico,Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Noturno (18h-23h),3 ou mais,WiFi_Publico,Limpa,SIM
+Internacional,Novo,Madrugada (23h-08h),1 a 2,Proxy_VPN,Suspeita,SIM
+Habitual,Novo,Comercial (08h-18h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Novo,Madrugada (23h-08h),1 a 2,Proxy_VPN,Suspeita,SIM
+Internacional,Novo,Madrugada (23h-08h),0,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Noturno (18h-23h),1 a 2,WiFi_Publico,Suspeita,SIM
+Nova (Nacional),Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Internacional,Conhecido,Noturno (18h-23h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Noturno (18h-23h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Nova (Nacional),Conhecido,Noturno (18h-23h),3 ou mais,Proxy_VPN,Limpa,SIM
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Comercial (08h-18h),3 ou mais,Móvel (4G/5G),Suspeita,SIM
+Habitual,Conhecido,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Habitual,Novo,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Comercial (08h-18h),1 a 2,Proxy_VPN,Suspeita,SIM
+Internacional,Novo,Madrugada (23h-08h),1 a 2,WiFi_Publico,Suspeita,SIM
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Novo,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Novo,Comercial (08h-18h),1 a 2,Proxy_VPN,Suspeita,SIM
+Internacional,Novo,Madrugada (23h-08h),0,WiFi_Publico,Suspeita,SIM
+Internacional,Novo,Madrugada (23h-08h),0,WiFi_Publico,Limpa,SIM
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,WiFi_Publico,Limpa,SIM
+Internacional,Novo,Noturno (18h-23h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Nova (Nacional),Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Comercial (08h-18h),0,WiFi_Publico,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Móvel (4G/5G),Limpa,NÃO
+Nova (Nacional),Conhecido,Comercial (08h-18h),1 a 2,Móvel (4G/5G),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Móvel (4G/5G),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Limpa,SIM
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Novo,Noturno (18h-23h),1 a 2,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Noturno (18h-23h),1 a 2,WiFi_Publico,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Limpa,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Móvel (4G/5G),Suspeita,SIM
+Nova (Nacional),Novo,Noturno (18h-23h),3 ou mais,Móvel (4G/5G),Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,WiFi_Publico,Limpa,NÃO
+Internacional,Novo,Noturno (18h-23h),0,Confiável (Residencial/Corp),Suspeita,SIM
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,WiFi_Publico,Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Madrugada (23h-08h),3 ou mais,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Móvel (4G/5G),Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Móvel (4G/5G),Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Suspeita,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Noturno (18h-23h),3 ou mais,WiFi_Publico,Suspeita,SIM
+Nova (Nacional),Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),0,Proxy_VPN,Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,WiFi_Publico,Suspeita,SIM
+Internacional,Novo,Noturno (18h-23h),3 ou mais,Confiável (Residencial/Corp),Suspeita,SIM
+Habitual,Conhecido,Noturno (18h-23h),1 a 2,WiFi_Publico,Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,WiFi_Publico,Suspeita,SIM
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Internacional,Novo,Madrugada (23h-08h),0,Móvel (4G/5G),Suspeita,SIM
+Internacional,Conhecido,Comercial (08h-18h),0,Móvel (4G/5G),Limpa,NÃO
+Habitual,Novo,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),1 a 2,Móvel (4G/5G),Suspeita,SIM
+Habitual,Novo,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),1 a 2,WiFi_Publico,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),3 ou mais,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),1 a 2,Móvel (4G/5G),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Móvel (4G/5G),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),1 a 2,Móvel (4G/5G),Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Confiável (Residencial/Corp),Limpa,NÃO
+Internacional,Novo,Madrugada (23h-08h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Comercial (08h-18h),1 a 2,Móvel (4G/5G),Limpa,NÃO
+Habitual,Novo,Comercial (08h-18h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Habitual,Conhecido,Noturno (18h-23h),0,Confiável (Residencial/Corp),Limpa,NÃO
+Nova (Nacional),Novo,Comercial (08h-18h),3 ou mais,WiFi_Publico,Limpa,SIM
+Habitual,Conhecido,Noturno (18h-23h),0,Móvel (4G/5G),Limpa,NÃO
+Nova (Nacional),Novo,Madrugada (23h-08h),0,Confiável (Residencial/Corp),Suspeita,SIM
+Internacional,Novo,Comercial (08h-18h),3 ou mais,Proxy_VPN,Suspeita,SIM
+Habitual,Conhecido,Comercial (08h-18h),0,WiFi_Publico,Limpa,NÃO
