@@ -50,7 +50,7 @@ totais AS (
     FROM tb_treinamento
 ),
 
--- 3. CARDINALIDADE DAS FEATURES (Para Laplace)
+-- 3. CARDINALIDADE DAS FEATURES (Para o denominador de Laplace)
 cardinalidade AS (
     SELECT 
         (SELECT COUNT(DISTINCT localizacao) FROM tb_treinamento) AS k_loc,
@@ -108,7 +108,7 @@ probs_nao_normalizadas AS (
     FROM score_por_caso
 )
 
--- 7. NORMALIZAÇÃO (0 a 100%) E RECOMENDAÇÃO (Saída Formatada)
+-- Exibe o resultado final com a porcentagem e a recomendação
 SELECT 
     caso AS 'Caso',
     perfil AS 'Perfil de Teste',
@@ -120,3 +120,61 @@ SELECT
     END AS 'Decisao'
 FROM probs_nao_normalizadas
 ORDER BY caso;
+
+
+-- =========================================================================
+-- ANÁLISE DE PODER DISCRIMINATIVO (LOG-ODDS)
+-- Identifica quais as 5 categorias que mais influenciam uma INVASÃO
+-- Log-Odds = LN( P(Feature | Invasao) ) - LN( P(Feature | Legitimo) )
+-- =========================================================================
+WITH totais2 AS (
+    SELECT 
+        SUM(CASE WHEN tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) * 1.0 AS total_sim,
+        SUM(CASE WHEN tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) * 1.0 AS total_nao
+    FROM tb_treinamento
+),
+cardinalidade2 AS (
+    SELECT 
+        (SELECT COUNT(DISTINCT localizacao) FROM tb_treinamento) AS k_loc,
+        (SELECT COUNT(DISTINCT dispositivo) FROM tb_treinamento) AS k_disp,
+        (SELECT COUNT(DISTINCT horario) FROM tb_treinamento) AS k_hor,
+        (SELECT COUNT(DISTINCT falhas_senha) FROM tb_treinamento) AS k_falhas,
+        (SELECT COUNT(DISTINCT tipo_rede) FROM tb_treinamento) AS k_rede,
+        (SELECT COUNT(DISTINCT reputacao_ip) FROM tb_treinamento) AS k_ip
+),
+log_odds_todas_features AS (
+    SELECT 'Localizacao' AS feature, localizacao AS categoria,
+        LN((SUM(CASE WHEN tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_sim FROM totais2) + (SELECT k_loc FROM cardinalidade2))) 
+        - LN((SUM(CASE WHEN tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_nao FROM totais2) + (SELECT k_loc FROM cardinalidade2))) AS log_odds_invasao
+    FROM tb_treinamento GROUP BY localizacao
+    UNION ALL
+    SELECT 'Dispositivo', dispositivo,
+        LN((SUM(CASE WHEN tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_sim FROM totais2) + (SELECT k_disp FROM cardinalidade2))) 
+        - LN((SUM(CASE WHEN tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_nao FROM totais2) + (SELECT k_disp FROM cardinalidade2)))
+    FROM tb_treinamento GROUP BY dispositivo
+    UNION ALL
+    SELECT 'Horario', horario,
+        LN((SUM(CASE WHEN tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_sim FROM totais2) + (SELECT k_hor FROM cardinalidade2))) 
+        - LN((SUM(CASE WHEN tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_nao FROM totais2) + (SELECT k_hor FROM cardinalidade2)))
+    FROM tb_treinamento GROUP BY horario
+    UNION ALL
+    SELECT 'Falhas_Senha', falhas_senha,
+        LN((SUM(CASE WHEN tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_sim FROM totais2) + (SELECT k_falhas FROM cardinalidade2))) 
+        - LN((SUM(CASE WHEN tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_nao FROM totais2) + (SELECT k_falhas FROM cardinalidade2)))
+    FROM tb_treinamento GROUP BY falhas_senha
+    UNION ALL
+    SELECT 'Tipo_Rede', tipo_rede,
+        LN((SUM(CASE WHEN tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_sim FROM totais2) + (SELECT k_rede FROM cardinalidade2))) 
+        - LN((SUM(CASE WHEN tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_nao FROM totais2) + (SELECT k_rede FROM cardinalidade2)))
+    FROM tb_treinamento GROUP BY tipo_rede
+    UNION ALL
+    SELECT 'Reputacao_IP', reputacao_ip,
+        LN((SUM(CASE WHEN tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_sim FROM totais2) + (SELECT k_ip FROM cardinalidade2))) 
+        - LN((SUM(CASE WHEN tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / ((SELECT total_nao FROM totais2) + (SELECT k_ip FROM cardinalidade2)))
+    FROM tb_treinamento GROUP BY reputacao_ip
+)
+-- Pega o TOP 5 de log-odds (Poder discriminativo a favor de Invasão)
+SELECT feature AS 'Feature', categoria AS 'Categoria', ROUND(log_odds_invasao, 4) AS 'Log-Odds (Invasao)'
+FROM log_odds_todas_features
+ORDER BY log_odds_invasao DESC
+LIMIT 5;
