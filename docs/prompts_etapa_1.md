@@ -34,8 +34,6 @@
 
 ## Interação 2 - Features Relevantes
 
-**Data:** 27/08/2026
-
 **Prompt do Usuário:**
 
 > a próxima pergunta é: 2. Quais são as 6 a 8 features mais relevantes para esse domínio?
@@ -107,32 +105,37 @@
 > - **Por que é significativa:** Como discutimos, IPs corporativos e residenciais são estáveis e rastreáveis. Redes móveis mudam de IP, mas são seguras. Wi-Fi público tem risco de interceptação. Por fim, Proxies e VPNs são ativamente usados por cibercriminosos para ocultar rastros.
 >
 > **6. `reputacao_ip` (Reputação da Rede/IP)**
+>
 > - **Categorias:** `Limpa`, `Suspeita`.
 > - **Por que é significativa:** Empresas de cibersegurança mantêm listas de IPs conhecidos por enviar spam, hospedar malware ou fazer ataques de força bruta. Se o IP do login está sujo (`Suspeita`), as chances de ser um ataque são gigantescas, mesmo que o invasor tenha a senha correta.
 
 ---
 
 ## Interação 4 - Lógica Intuitiva
-**Data:** 27/08/2026
 
 **Prompt do Usuário:**
+
 > Prossiga para a pergunta 4, lembrando sempre de justificar em detalhes suas respostas de maneira didática para que eu entenda perfeitamente a aplicação do algoritmo no contexto
 
 **Resposta da IA:**
-> A lógica intuitiva por trás do Classificador Naive Bayes é a **acumulação de evidências**. O algoritmo assume (de forma "ingênua", daí o nome *Naive*) que cada característica contribui de forma independente para a probabilidade final de um evento ocorrer.
-> 
+
+> A lógica intuitiva por trás do Classificador Naive Bayes é a **acumulação de evidências**. O algoritmo assume (de forma "ingênua", daí o nome _Naive_) que cada característica contribui de forma independente para a probabilidade final de um evento ocorrer.
+>
 > No nosso contexto de **Detecção de Login Suspeito**, uma feature isolada raramente é motivo para bloquear um usuário, mas a combinação delas pinta um quadro probabilístico muito claro. Veja a lógica por trás de três padrões de risco distintos:
-> 
+>
 > **1. Padrão de Baixo Risco (O Usuário Comum):**
-> *   *Cenário:* Localização `Habitual`, Dispositivo `Conhecido`, Horário `Comercial`, `0` falhas de senha, Rede `Confiável`, IP com Reputação `Limpa`.
-> *   *Lógica Intuitiva:* Todas as "pistas" apontam para a rotina perfeitamente normal do dono da conta. Historicamente (nos nossos dados de treinamento), a imensa maioria das vezes em que esse padrão ocorre, trata-se de um login seguro. O algoritmo multiplica essas altas probabilidades a favor da classe "NÃO" (Não é invasão) e o sistema libera o login instantaneamente.
-> 
+>
+> - _Cenário:_ Localização `Habitual`, Dispositivo `Conhecido`, Horário `Comercial`, `0` falhas de senha, Rede `Confiável`, IP com Reputação `Limpa`.
+> - _Lógica Intuitiva:_ Todas as "pistas" apontam para a rotina perfeitamente normal do dono da conta. Historicamente (nos nossos dados de treinamento), a imensa maioria das vezes em que esse padrão ocorre, trata-se de um login seguro. O algoritmo multiplica essas altas probabilidades a favor da classe "NÃO" (Não é invasão) e o sistema libera o login instantaneamente.
+>
 > **2. Padrão de Alto Risco (O Atacante Clássico):**
-> *   *Cenário:* Localização `Internacional`, Dispositivo `Novo`, Horário `Madrugada`, `3 ou mais` falhas de senha, Rede `Proxy_VPN`, IP com Reputação `Suspeita`.
-> *   *Lógica Intuitiva:* Aqui temos uma "tempestade perfeita" de anomalias. Alguém de outro país, escondendo seu rastro (VPN) em um IP já sujo no mercado, tentando adivinhar senhas repetidas vezes de madrugada, em um aparelho que nunca vimos. Cada uma dessas variáveis, matematicamente, possui uma forte correlação histórica com a classe "SIM" (Tentativa de Invasão). Ao multiplicar o peso dessas evidências suspeitas, a probabilidade de ser fraude dispara para perto de 99%, acionando o bloqueio.
-> 
+>
+> - _Cenário:_ Localização `Internacional`, Dispositivo `Novo`, Horário `Madrugada`, `3 ou mais` falhas de senha, Rede `Proxy_VPN`, IP com Reputação `Suspeita`.
+> - _Lógica Intuitiva:_ Aqui temos uma "tempestade perfeita" de anomalias. Alguém de outro país, escondendo seu rastro (VPN) em um IP já sujo no mercado, tentando adivinhar senhas repetidas vezes de madrugada, em um aparelho que nunca vimos. Cada uma dessas variáveis, matematicamente, possui uma forte correlação histórica com a classe "SIM" (Tentativa de Invasão). Ao multiplicar o peso dessas evidências suspeitas, a probabilidade de ser fraude dispara para perto de 99%, acionando o bloqueio.
+>
 > **3. Padrão Ambíguo (A Área Cinzenta - Onde o Algoritmo Brilha):**
-> *   *Cenário:* Localização `Habitual`, Dispositivo `Novo`, Horário `Comercial`, `0` falhas, Rede `WiFi_Publico`, IP `Limpo`.
-> *   *Lógica Intuitiva:* É aqui que regras rígidas tradicionais (ex: *SE dispositivo novo ENTÃO bloqueia*) falham e incomodam o usuário. A pessoa pode simplesmente ter comprado um celular novo e conectado no Wi-Fi do shopping durante a tarde. O Naive Bayes vai colocar isso na balança: a feature "Dispositivo Novo" e "WiFi_Publico" puxam o risco um pouco para cima, mas as features "Localização Habitual", "Horário Comercial", "0 falhas" e "IP Limpo" puxam o risco fortemente para baixo. O peso das evidências benignas supera as suspeitas, e o sistema entende que é mais provável ser o usuário legítimo de celular novo do que um ataque direcionado.
-> 
+>
+> - _Cenário:_ Localização `Habitual`, Dispositivo `Novo`, Horário `Comercial`, `0` falhas, Rede `WiFi_Publico`, IP `Limpo`.
+> - _Lógica Intuitiva:_ É aqui que regras rígidas tradicionais (ex: _SE dispositivo novo ENTÃO bloqueia_) falham e incomodam o usuário. A pessoa pode simplesmente ter comprado um celular novo e conectado no Wi-Fi do shopping durante a tarde. O Naive Bayes vai colocar isso na balança: a feature "Dispositivo Novo" e "WiFi_Publico" puxam o risco um pouco para cima, mas as features "Localização Habitual", "Horário Comercial", "0 falhas" e "IP Limpo" puxam o risco fortemente para baixo. O peso das evidências benignas supera as suspeitas, e o sistema entende que é mais provável ser o usuário legítimo de celular novo do que um ataque direcionado.
+>
 > Essa é a beleza do Teorema de Bayes aplicado a problemas reais: ele toma decisões baseadas em uma **balança de probabilidades** construída a partir da frequência histórica dos dados, simulando a intuição de um analista de segurança experiente.

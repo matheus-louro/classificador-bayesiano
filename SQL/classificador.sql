@@ -1,35 +1,56 @@
 -- =========================================================================
--- ETAPA 3: Implementação do Classificador Naive Bayes em SQL Puro
+-- ETAPA 3 e 4: Classificador Naive Bayes em SQL Puro (Múltiplos Testes)
 -- Domínio: Detecção de Login Suspeito
 -- =========================================================================
 
--- Utilizamos Common Table Expressions (CTE) para estruturar o algoritmo em passos lógicos.
 WITH 
--- 1. ENTRADA DE DADOS (CASO DE TESTE)
--- Aqui definimos o cenário que queremos classificar. Altere os valores para testar outros perfis.
--- Este exemplo simula um 'Alto Risco'.
-entrada_teste AS (
-    SELECT 
-        'Internacional'       AS p_localizacao,
-        'Novo'                AS p_dispositivo,
-        'Madrugada (23h-08h)' AS p_horario,
-        '3 ou mais'           AS p_falhas_senha,
-        'Proxy_VPN'           AS p_tipo_rede,
-        'Suspeita'            AS p_reputacao_ip
+-- 1. ENTRADA DE DADOS: 5 CASOS DE TESTE COM PERFIS DISTINTOS
+casos_teste AS (
+    -- Caso 1: Usuário Habitual (Baixo Risco) -> Padrão de rotina normal
+    SELECT 1 AS caso, 'Baixo Risco (Usuário Habitual)' AS perfil, 
+    'Habitual' AS localizacao, 'Conhecido' AS dispositivo, 'Comercial (08h-18h)' AS horario, '0' AS falhas_senha, 'Confiável (Residencial/Corp)' AS tipo_rede, 'Limpa' AS reputacao_ip 
+    UNION ALL
+    
+    -- Caso 2: Atacante Clássico (Alto Risco) -> Padrão óbvio de invasor
+    SELECT 2 AS caso, 'Alto Risco (Atacante)' AS perfil, 
+    'Internacional' AS localizacao, 'Novo' AS dispositivo, 'Madrugada (23h-08h)' AS horario, '3 ou mais' AS falhas_senha, 'Proxy_VPN' AS tipo_rede, 'Suspeita' AS reputacao_ip 
+    UNION ALL
+    
+    -- Caso 3: Ambíguo (Viagem Nacional) -> Saiu da rotina, mas características são razoáveis
+    SELECT 3 AS caso, 'Ambíguo (Viagem Nacional)' AS perfil, 
+    'Nova (Nacional)' AS localizacao, 'Conhecido' AS dispositivo, 'Noturno (18h-23h)' AS horario, '1 a 2' AS falhas_senha, 'Móvel (4G/5G)' AS tipo_rede, 'Limpa' AS reputacao_ip 
+    UNION ALL
+    
+    -- Caso 4: Ambíguo (Celular Novo no Shopping) -> Dispositivo novo em rede de risco moderado, mas localização e hora normais
+    SELECT 4 AS caso, 'Ambíguo (Celular Novo)' AS perfil, 
+    'Habitual' AS localizacao, 'Novo' AS dispositivo, 'Comercial (08h-18h)' AS horario, '0' AS falhas_senha, 'WiFi_Publico' AS tipo_rede, 'Limpa' AS reputacao_ip 
+    UNION ALL
+    
+    -- Caso 5: Força Bruta Local -> Alguém próximo (ou botnet local) tentando adivinhar senha
+    SELECT 5 AS caso, 'Ataque Local (Força Bruta)' AS perfil, 
+    'Habitual' AS localizacao, 'Conhecido' AS dispositivo, 'Madrugada (23h-08h)' AS horario, '3 ou mais' AS falhas_senha, 'Confiável (Residencial/Corp)' AS tipo_rede, 'Suspeita' AS reputacao_ip
+    UNION ALL
+    
+    -- Caso 6: Teste Laplace -> Contém features completamente malucas/inéditas não presentes na base
+    SELECT 6 AS caso, 'Valores Inéditos (Laplace)' AS perfil, 
+    'Marte (Espaço)' AS localizacao, 'Geladeira Smart' AS dispositivo, 'Comercial (08h-18h)' AS horario, '0' AS falhas_senha, 'Satélite Starlink' AS tipo_rede, 'Limpa' AS reputacao_ip
+    UNION ALL
+    
+    -- Caso 7: Teste Laplace Extremo -> NENHUMA feature é conhecida no treinamento
+    SELECT 7 AS caso, 'Tudo Inédito (Laplace Extremo)' AS perfil, 
+    'Narnia' AS localizacao, 'Torradeira' AS dispositivo, 'Hora do Chá' AS horario, '-1' AS falhas_senha, 'Telepatia' AS tipo_rede, 'Desconhecida' AS reputacao_ip
 ),
 
 -- 2. CONTAGENS GERAIS E POR CLASSE
--- Quantidade total de registros e total para cada classe (SIM e NÃO) na base de treinamento.
 totais AS (
     SELECT 
-        COUNT(*) AS total_registros,
-        SUM(CASE WHEN tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) AS total_sim,
-        SUM(CASE WHEN tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) AS total_nao
+        COUNT(*) * 1.0 AS total,
+        SUM(CASE WHEN tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) * 1.0 AS total_sim,
+        SUM(CASE WHEN tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) * 1.0 AS total_nao
     FROM tb_treinamento
 ),
 
--- 3. CARDINALIDADE DAS FEATURES (Para o cálculo da suavização de Laplace)
--- Contamos quantas categorias únicas existem para cada feature.
+-- 3. CARDINALIDADE DAS FEATURES (Para Laplace)
 cardinalidade AS (
     SELECT 
         (SELECT COUNT(DISTINCT localizacao) FROM tb_treinamento) AS k_loc,
@@ -40,76 +61,62 @@ cardinalidade AS (
         (SELECT COUNT(DISTINCT reputacao_ip) FROM tb_treinamento) AS k_ip
 ),
 
--- 4. PROBABILIDADES A PRIORI: P(Classe) em Logaritmo
--- P(Classe) = Total da Classe / Total de Registros
--- Usamos LN() nativo do SQLite (requer Math function habilitada) para evitar underflow.
+-- 4. PROBABILIDADES A PRIORI (Logaritmo)
 priori AS (
-    SELECT
-        LN(CAST(total_sim AS REAL) / total_registros) AS log_prior_sim,
-        LN(CAST(total_nao AS REAL) / total_registros) AS log_prior_nao
+    SELECT 
+        LN(total_sim / total) AS log_prior_sim,
+        LN(total_nao / total) AS log_prior_nao
     FROM totais
 ),
 
--- 5. VEROSSIMILHANÇAS: P(Feature = Valor | Classe) em Logaritmo com SUAVIZAÇÃO DE LAPLACE
--- Fórmula de Laplace: (Contagem da Feature na Classe + 1) / (Total da Classe + Número de Categorias da Feature)
-verossimilhancas AS (
-    SELECT
-        -- Feature: Localização
-        LN((SUM(CASE WHEN localizacao = p_localizacao AND tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_sim) + MAX(c.k_loc))) AS log_loc_sim,
-        LN((SUM(CASE WHEN localizacao = p_localizacao AND tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_nao) + MAX(c.k_loc))) AS log_loc_nao,
+-- 5. CÁLCULO DAS VEROSSIMILHANÇAS POR CASO DE TESTE (Usando subqueries correlacionadas para Laplace)
+score_por_caso AS (
+    SELECT 
+        teste.caso,
+        teste.perfil,
         
-        -- Feature: Dispositivo
-        LN((SUM(CASE WHEN dispositivo = p_dispositivo AND tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_sim) + MAX(c.k_disp))) AS log_disp_sim,
-        LN((SUM(CASE WHEN dispositivo = p_dispositivo AND tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_nao) + MAX(c.k_disp))) AS log_disp_nao,
+        -- Somatório dos Logs para a classe SIM
+        (SELECT log_prior_sim FROM priori)
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'SIM' AND localizacao = teste.localizacao) + 1.0 ) / ( (SELECT total_sim FROM totais) + (SELECT k_loc FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'SIM' AND dispositivo = teste.dispositivo) + 1.0 ) / ( (SELECT total_sim FROM totais) + (SELECT k_disp FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'SIM' AND horario = teste.horario) + 1.0 ) / ( (SELECT total_sim FROM totais) + (SELECT k_hor FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'SIM' AND falhas_senha = teste.falhas_senha) + 1.0 ) / ( (SELECT total_sim FROM totais) + (SELECT k_falhas FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'SIM' AND tipo_rede = teste.tipo_rede) + 1.0 ) / ( (SELECT total_sim FROM totais) + (SELECT k_rede FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'SIM' AND reputacao_ip = teste.reputacao_ip) + 1.0 ) / ( (SELECT total_sim FROM totais) + (SELECT k_ip FROM cardinalidade) ))
+        AS score_sim,
 
-        -- Feature: Horário
-        LN((SUM(CASE WHEN horario = p_horario AND tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_sim) + MAX(c.k_hor))) AS log_hor_sim,
-        LN((SUM(CASE WHEN horario = p_horario AND tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_nao) + MAX(c.k_hor))) AS log_hor_nao,
+        -- Somatório dos Logs para a classe NÃO
+        (SELECT log_prior_nao FROM priori)
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'NÃO' AND localizacao = teste.localizacao) + 1.0 ) / ( (SELECT total_nao FROM totais) + (SELECT k_loc FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'NÃO' AND dispositivo = teste.dispositivo) + 1.0 ) / ( (SELECT total_nao FROM totais) + (SELECT k_disp FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'NÃO' AND horario = teste.horario) + 1.0 ) / ( (SELECT total_nao FROM totais) + (SELECT k_hor FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'NÃO' AND falhas_senha = teste.falhas_senha) + 1.0 ) / ( (SELECT total_nao FROM totais) + (SELECT k_falhas FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'NÃO' AND tipo_rede = teste.tipo_rede) + 1.0 ) / ( (SELECT total_nao FROM totais) + (SELECT k_rede FROM cardinalidade) ))
+        + LN(( (SELECT COUNT(*) FROM tb_treinamento WHERE tentativa_invasao = 'NÃO' AND reputacao_ip = teste.reputacao_ip) + 1.0 ) / ( (SELECT total_nao FROM totais) + (SELECT k_ip FROM cardinalidade) ))
+        AS score_nao
 
-        -- Feature: Falhas Senha
-        LN((SUM(CASE WHEN falhas_senha = p_falhas_senha AND tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_sim) + MAX(c.k_falhas))) AS log_falhas_sim,
-        LN((SUM(CASE WHEN falhas_senha = p_falhas_senha AND tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_nao) + MAX(c.k_falhas))) AS log_falhas_nao,
-
-        -- Feature: Tipo Rede
-        LN((SUM(CASE WHEN tipo_rede = p_tipo_rede AND tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_sim) + MAX(c.k_rede))) AS log_rede_sim,
-        LN((SUM(CASE WHEN tipo_rede = p_tipo_rede AND tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_nao) + MAX(c.k_rede))) AS log_rede_nao,
-
-        -- Feature: Reputacao IP
-        LN((SUM(CASE WHEN reputacao_ip = p_reputacao_ip AND tentativa_invasao = 'SIM' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_sim) + MAX(c.k_ip))) AS log_ip_sim,
-        LN((SUM(CASE WHEN reputacao_ip = p_reputacao_ip AND tentativa_invasao = 'NÃO' THEN 1 ELSE 0 END) + 1.0) / (MAX(t.total_nao) + MAX(c.k_ip))) AS log_ip_nao
-    FROM tb_treinamento, entrada_teste, totais t, cardinalidade c
+    FROM casos_teste teste
 ),
 
--- 6. SCORE FINAL EM LOG-PROBABILIDADES
--- Somamos os Logaritmos para simular a multiplicação das probabilidades (Log A * B = Log A + Log B)
-score_classes AS (
-    SELECT
-        p.log_prior_sim + v.log_loc_sim + v.log_disp_sim + v.log_hor_sim + v.log_falhas_sim + v.log_rede_sim + v.log_ip_sim AS score_sim,
-        p.log_prior_nao + v.log_loc_nao + v.log_disp_nao + v.log_hor_nao + v.log_falhas_nao + v.log_rede_nao + v.log_ip_nao AS score_nao
-    FROM priori p, verossimilhancas v
-),
-
--- 7. REVERSÃO DO LOGARITMO PARA NORMALIZAÇÃO (Aplicando a função Exponencial)
--- Precisamos dos valores "brutos" novamente para extrair a porcentagem final de probabilidade
+-- 6. REVERTER O LOG (Exponencial) PARA NORMALIZAR
 probs_nao_normalizadas AS (
-    SELECT
+    SELECT 
+        caso,
+        perfil,
         EXP(score_sim) AS exp_sim,
         EXP(score_nao) AS exp_nao
-    FROM score_classes
-),
-
--- 8. NORMALIZAÇÃO FINAL (SCORE ENTRE 0% E 100%) E RECOMENDAÇÃO
--- Probabilidade da Classe = Exp(Classe) / (Exp(SIM) + Exp(NÃO))
-resultado_final AS (
-    SELECT
-        ROUND((exp_sim / (exp_sim + exp_nao)) * 100, 2) AS chance_invasao_pct,
-        ROUND((exp_nao / (exp_sim + exp_nao)) * 100, 2) AS chance_legitimo_pct,
-        CASE 
-            WHEN (exp_sim / (exp_sim + exp_nao)) > 0.5 THEN '🚨 BLOQUEAR ACESSO (Tentativa de Invasão Detectada)'
-            ELSE '✅ AUTORIZAR ACESSO (Login Legítimo)'
-        END AS decisao
-    FROM probs_nao_normalizadas
+    FROM score_por_caso
 )
 
--- Exibe o resultado final com a porcentagem e a recomendação
-SELECT * FROM resultado_final;
+-- 7. NORMALIZAÇÃO (0 a 100%) E RECOMENDAÇÃO (Saída Formatada)
+SELECT 
+    caso AS 'Caso',
+    perfil AS 'Perfil de Teste',
+    PRINTF('%.2f%%', (exp_sim / (exp_sim + exp_nao)) * 100) AS 'Chance invasao',
+    PRINTF('%.2f%%', (exp_nao / (exp_sim + exp_nao)) * 100) AS 'Chance legitimo',
+    CASE 
+        WHEN (exp_sim / (exp_sim + exp_nao)) > 0.5 THEN 'BLOQUEAR'
+        ELSE 'AUTORIZAR'
+    END AS 'Decisao'
+FROM probs_nao_normalizadas
+ORDER BY caso;
